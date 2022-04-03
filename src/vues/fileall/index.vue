@@ -43,7 +43,7 @@
 				<el-button type="text" size="mini" icon="el-icon-caret-right" v-for="item in items" :key="item" @click="itemClickPrev(item.id)">{{item.name}}</el-button>
 			</el-col>
 		</el-row>
-		
+
 		<!--文件列表-->
 		<el-row style="height: 85%;overflow: auto;">
 		  	<el-col :span="24">
@@ -101,7 +101,7 @@
 			<dlOpen ref="form" v-if="dialog.type=='open'"></dlOpen>
 			<dlDownload ref="form" v-if="dialog.type=='download'"></dlDownload>
 			<dlRename ref="form" v-if="dialog.type=='rename'" v-on:closeAndRefresh="dialogClose"></dlRename>
-			<dlUpURL ref="form" v-if="dialog.type=='urlup'" v-on:closeAndRefresh="dialogClose"></dlUpURL>
+			<dlUpURL ref="urlup" v-if="dialog.type=='urlup'" v-on:closeAndRefresh="dialogClose"></dlUpURL>
 			<dlMove ref="form" v-if="dialog.type=='move'" v-on:closeAndRefresh="dialogClose"></dlMove>
 			<div slot="footer" class="dialog-footer" v-if="dialog.type=='move'">
     			<el-button @click="cancel()">取 消</el-button>
@@ -311,14 +311,21 @@
 					this.drawer.visible = true;
 					this.drawer.title = "上传文件夹";
 				}else{
-					this.dialog.width="550px";
-					this.dialog.title="使用URL上传文件";
-					this.dialog.visible=true;
+					this.dialog.width="750px";
 					this.dialog.type="urlup";
+					this.dialog.visible=true;
+					this.dialog.title="使用URL上传文件";
 				}
-				setTimeout(()=>{
-					this.$refs.uploader.setData2(this.search.pid,type);
-				},0);
+				if(type == "file" || type == "folder"){
+					setTimeout(()=>{
+						this.$refs.uploader.setData2(this.search.pid,type);
+					},0);
+				}else{
+					setTimeout(()=>{
+						this.$refs.urlup.setData(this.search.pid);
+					},0);
+				}
+				
 			},
 			renameUI(){ // 重命名处理函数
 				var len=this.checkeditems.length;
@@ -369,8 +376,12 @@
 						var data = response.body;
 						if(data.code == 0){
 							this.searchs();
+							this.$message({
+								message: "文件已删除",
+								type: 'success'
+							});
 						}
-						this.alertMsg(data.code,data.msg);
+						// this.alertMsg(data.code,data.msg);
         				this.loading=false;
 					});
         		});
