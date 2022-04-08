@@ -142,7 +142,7 @@
 				],
 				search:{
 					pid:0,
-					orderfield:'createtime',
+					orderfield:'createTime',
 					ordertype:'descending'
 				},
 				table:{

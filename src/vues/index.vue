@@ -17,8 +17,8 @@
 	  				</el-col>
 	  			</el-row>
 			</el-header>
-			<el-container style="height: 100%;">
-    			<el-main style="overflow:auto;height: 100%;">
+			<el-container style="height: 100%; overflow: auto;">
+    			<el-main>
     				<router-view></router-view>
     			</el-main>
   			</el-container>
