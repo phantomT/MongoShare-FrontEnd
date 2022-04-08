@@ -38,7 +38,7 @@
 				this.file.filemd5=filemd5;
 			},
 			download(){
-				location.href=this.baseurl+"/disk/filedownload/download?fileid="+this.file.id+"&token="+sessionStorage.getItem("token");
+				location.href=this.baseurl+"/disk/fileDownload/download?fileid="+this.file.id+"&token="+sessionStorage.getItem("token");
 			}
 		}
 	}

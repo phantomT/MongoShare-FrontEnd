@@ -19,7 +19,7 @@
 		methods:{
 			//文档、视频、音乐、图片、其他===上传
 			setData(folderid,albumid){
-				this.url=this.uploadurl+"/public/html/upload_file.html?uuid="+this.uuid+"&folderid="+folderid+"&albumid="+albumid+"&token="+sessionStorage.getItem("token");
+				this.url=this.uploadurl+"/public/html/upload_file.html?uuid="+this.uuid+"&folderId="+folderid+"&albumid="+albumid+"&token="+sessionStorage.getItem("token");
 			},
 			//全部===上传
 			setData2(folderid,type){
@@ -30,7 +30,7 @@
 				}else if(type=="folder"){
 					page="upload_folder.html";
 				}
-				this.url=this.uploadurl+"/public/html/"+page+"?uuid="+this.uuid+"&folderid="+folderid+"&albumid="+albumid+"&token="+sessionStorage.getItem("token");
+				this.url=this.uploadurl+"/public/html/"+page+"?uuid="+this.uuid+"&folderId="+folderid+"&albumid="+albumid+"&token="+sessionStorage.getItem("token");
 			}
 		}
 	}

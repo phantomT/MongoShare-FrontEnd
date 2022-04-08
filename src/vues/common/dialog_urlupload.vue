@@ -37,8 +37,8 @@ export default {
 			this.nameValidation(this.inputFilename);
 			if(this.urlValid && this.nameValid){
 				this.loading=true;
-				this.$http.post('disk/fileupload/urlUp',{
-					"userid":sessionStorage.getItem("username"),
+				this.$http.post('disk/fileUpload/urlUp',{
+					"userName":sessionStorage.getItem("username"),
 					"pid":this.folderid,
 					"url":this.inputURL,
 					"filename":this.inputFilename,

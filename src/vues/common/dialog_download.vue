@@ -54,8 +54,8 @@
 			},
 			getDownloadInfo(){
 				this.loading=true;
-    			this.$http.post('disk/filedownload/getDownloadInfo',{
-    				"idjson":this.idjson,
+    			this.$http.post('disk/fileDownload/getDownloadInfo',{
+    				"idJson":this.idjson,
     				"token":sessionStorage.getItem("token")
     			}).then(response => {
     				this.loading=false;
@@ -80,10 +80,10 @@
 					return;
 				}
 				this.loading=true;
-    			this.$http.post('disk/filedownload/mergeFiles',{
+    			this.$http.post('disk/fileDownload/mergeFiles',{
     				"downloadName":this.downloadname,
     				"downloadSuffix":this.downloadsuffix,
-    				"idjson":this.idjson,
+    				"idJson":this.idjson,
     				"token":sessionStorage.getItem("token")
     			}).then(response => {
     				this.loading=false;

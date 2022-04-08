@@ -30,21 +30,21 @@
 		},
 		methods:{
 			showInfo(id){
-				this.$http.post('disk/filecommon/findOne',{
-					"userid":sessionStorage.getItem("username"),
+				this.$http.post('disk/fileCommon/findOne',{
+					"userName":sessionStorage.getItem("username"),
     				"id":id,
     				"token":sessionStorage.getItem("token")
     			}).then(response => {
 					var data=response.body;
 					if(data.code==0){
 						this.form.id=data.data.id;
-						this.form.filesuffix=data.data.filesuffix;//格式
-						this.form.filetype=data.data.filetype;//0文件夹，1文件
+						this.form.filesuffix=data.data.fileSuffix;//格式
+						this.form.filetype=data.data.fileType;//0文件夹，1文件
 						//文件名称
 						if(this.form.filetype==0){
-							this.form.filename=data.data.filename;
+							this.form.filename=data.data.fileName;
 						}else if(this.form.filetype==1){
-							var filename=data.data.filename;
+							var filename=data.data.fileName;
 							var basename = filename.substring(0,filename.lastIndexOf('.'));
 							this.form.filename=basename;
 						}
@@ -64,8 +64,8 @@
         				name=name+"."+this.form.filesuffix;
         			}
         			this.loading=true;
-        			this.$http.post('disk/filecommon/rename',{
-						"userid":sessionStorage.getItem("username"),
+        			this.$http.post('disk/fileCommon/rename',{
+						"userName":sessionStorage.getItem("username"),
         				"id":this.form.id,
         				"filename":name,
         				"token":sessionStorage.getItem("token")

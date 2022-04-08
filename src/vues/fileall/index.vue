@@ -51,18 +51,18 @@
 		  			<el-table-column type="selection" width="55"></el-table-column>
 					<el-table-column prop="filename" label="文件名" sortable>
 						<template slot-scope="scope">
-							<span class="link" @click="itemClickEnter(scope.row.rowindex)">{{scope.row.filename}}</span>
+							<span class="link" @click="itemClickEnter(scope.row.rowindex)">{{scope.row.fileName}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="filesize" label="大小" width="160" align="center" sortable>
 						<template slot-scope="scope">
-							<span v-if="scope.row.filesize!=0">{{scope.row.filesizename}}</span>
-							<span v-if="scope.row.filesize==0">-</span>
+							<span v-if="scope.row.fileSize!=0">{{scope.row.fileSizeName}}</span>
+							<span v-if="scope.row.fileSize==0">-</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="上传者" width="100" align="center">
           				<template slot-scope="scope">
-            				<span>{{ scope.row.createusername }}</span>
+            				<span>{{ scope.row.createUserName }}</span>
           				</template>
         			</el-table-column>
 					<el-table-column label="下载" width="90" align="center">
@@ -72,7 +72,11 @@
               				</el-button>
           				</template>
         			</el-table-column>
-					<el-table-column prop="createtime" label="修改日期" width="260" align="center" sortable></el-table-column>
+					<el-table-column prop="createtime" label="创建日期" width="260" align="center" sortable>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createTime }}</span>
+						</template>
+					</el-table-column>
 				</el-table>
 		  	</el-col>
 		</el-row>
@@ -185,8 +189,8 @@
 				this.loading=true;
 				this.$http.post('disk/file/findList',{
 					"pid":this.search.pid,
-					"orderfield":this.search.orderfield,
-					"ordertype":this.search.ordertype,
+					"orderField":this.search.orderfield,
+					"orderType":this.search.ordertype,
 					"page":this.table.currentpage,
 					"limit":this.table.pagesize,
 					//"token":sessionStorage.getItem("token")
@@ -215,9 +219,9 @@
 				for(var i=0;i<val.length;i++){
 					this.checkeditems.push({
 						"id": val[i].id,
-						"name": val[i].filename
+						"name": val[i].fileName
 					});
-					if(val[i].createusername !== this.nickname && this.nickname !== 'admin') this.checkAble = false;
+					if(val[i].createUserName !== this.nickname && this.nickname !== 'admin') this.checkAble = false;
 					else eqCount++;
 				}
 				if(eqCount === this.checkedcount) this.checkAble = true;
@@ -274,10 +278,10 @@
 					this.alertMsg(1,"您点击的记录不存在");
 					return;
 				}
-				if(row.filetype==0){
+				if(row.fileType==0){
 					this.items.push({
 						"id":row.id,
-						"name":row.filename
+						"name":row.fileName
 					});
 					this.search.pid=row.id;
 					this.searchs();
@@ -287,7 +291,7 @@
 					this.dialog.visible=true;
 					this.dialog.type="open";
 					setTimeout(()=>{
-						this.$refs.form.setData(row.id,row.filename,row.filesizename,row.filesuffix,row.filemd5);
+						this.$refs.form.setData(row.id,row.fileName,row.fileSizeName,row.fileSuffix,row.fileMd5);
 					},0);
 				}
 			},
@@ -368,9 +372,9 @@
           			type: 'warning'
         		}).then(() => {
         			this.loading=true;
-        			this.$http.post('disk/filecommon/delete',{
-						"userid":sessionStorage.getItem("username"),
-        				"idjson":JSON.stringify(this.checkeditems),
+        			this.$http.post('disk/fileCommon/delete',{
+						"userName":sessionStorage.getItem("username"),
+        				"idJson":JSON.stringify(this.checkeditems),
         				"token":sessionStorage.getItem("token")
         			}).then(response => {
 						var data = response.body;

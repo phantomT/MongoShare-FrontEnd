@@ -12,8 +12,8 @@
 		  			<el-table v-loading="loading" :data="table.data" :stripe="false" size="small" height="300px">
 						<el-table-column prop="filename" label="文件名">
 							<template slot-scope="scope">
-								<img :src="scope.row.fileicon" style="vertical-align: middle;margin-right: 10px;" />
-								<span class="link" @click="itemClickEnter(scope.row.rowindex)">{{scope.row.filename}}</span>
+								<img :src="scope.row.fileIcon" style="vertical-align: middle;margin-right: 10px;" />
+								<span class="link" @click="itemClickEnter(scope.row.rowindex)">{{scope.row.fileName}}</span>
 							</template>
 						</el-table-column>
 						<el-table-column prop="createtime" label="修改日期" width="140"></el-table-column>
@@ -70,10 +70,10 @@
 			},
 			findList(){
 				this.loading=true;
-				this.$http.post('disk/filecommon/findFolderList',{
-					"userid":sessionStorage.getItem("username"),
+				this.$http.post('disk/fileCommon/findFolderList',{
+					"userName":sessionStorage.getItem("username"),
 					"pid":this.search.pid,
-					"idjson":this.search.id,
+					"idJson":this.search.id,
 					"token":sessionStorage.getItem("token")
 				}).then(response => {
 					var data=response.body;
@@ -121,7 +121,7 @@
 				}
 				this.items.push({
 					"id":row.id,
-					"name":row.filename
+					"name":row.fileName
 				});
 				this.search.pid=row.id;
 				this.searchs();
@@ -157,10 +157,10 @@
           			type: 'warning'
         		}).then(() => {
         			this.loading=true;
-        			this.$http.post('disk/filecommon/moveTo',{
-						"userid":sessionStorage.getItem("username"),
-        				"idjson":this.search.id,
-        				"toid":this.search.pid,
+        			this.$http.post('disk/fileCommon/moveTo',{
+						"userName":sessionStorage.getItem("username"),
+        				"idJson":this.search.id,
+        				"toPid":this.search.pid,
         				"token":sessionStorage.getItem("token")
         			}).then(response => {
 						var data=response.body;

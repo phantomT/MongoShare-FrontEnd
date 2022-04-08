@@ -4,7 +4,7 @@
 			<el-header class="header">
 				<el-row>
 	  				<el-col :span="10" class="headercol">
-						<img src="../assets/img/logo.png" style="vertical-align: middle;"/>
+						<img src="../assets/img/logo.png" style="vertical-align: middle;" height="45px"/>
 	  				</el-col>
 					<el-col :span="8" class="headercol">
 						<img src="../assets/img/ustc.png" style="vertical-align: middle;" width="230px"/>

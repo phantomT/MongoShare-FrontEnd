@@ -45,9 +45,9 @@
 						getFileMd5(file,deferred);
 						
 						uploader.options.formData.uuid = $.getUrlParam("uuid");
-		            	uploader.options.formData.pid = $.getUrlParam("folderid");
+		            	uploader.options.formData.pid = $.getUrlParam("folderId");
             			uploader.options.formData.token = $.getUrlParam("token");
-						uploader.options.formData.userid = sessionStorage.getItem("username");
+						uploader.options.formData.userName = sessionStorage.getItem("username");
 						
             			//问题一：同时选择两个文件，大在前，小在后，则md5和filename会窜
             			//问题二：主要如果<chunkSize，则不分块，不会有chunk和chunks两参数
@@ -63,24 +63,24 @@
 			        },
 			        afterSendFile:function(file) {//合并切块
 			        	var node=getNode(file.id);
-			        	var url=baseurl+"disk/fileupload/mergeChunk";
+			        	var url=baseurl+"disk/fileUpload/mergeChunk";
 			        	var args={
 			        		"albumid":$.getUrlParam("albumid"),
-			        		"pid":$.getUrlParam("folderid"),
-			        		"relativepath":"",
+			        		"pid":$.getUrlParam("folderId"),
+			        		"relativePath":"",
 			        		"uuid":$.getUrlParam("uuid"),
-			        		"fileid":node.fileid,
-			        		"filename":node.filename,
-			        		"filemd5":node.md5,
+			        		"fileId":node.fileId,
+			        		"fileName":node.fileName,
+			        		"fileMd5":node.md5,
 			        		"totalSize":file.size,
 			        		"token":$.getUrlParam("token"),
-							"userid":sessionStorage.getItem("username")
+							"userName":sessionStorage.getItem("username")
 			        	};
 			        	$.post(url,args,function(data){
 			        		if(data.code==0){
-			        			updateNode(node.fileid,3,"上传成功","","");
+			        			updateNode(node.fileId,3,"上传成功","","");
 			        		}else{
-			        			updateNode(node.fileid,4,"上传失败",data.msg,"");
+			        			updateNode(node.fileId,4,"上传失败",data.msg,"");
 			        		}
 			        	});
 			        }
@@ -89,7 +89,7 @@
 			function init(){
 				uploader = WebUploader.create({
     				swf: '../js/webuploader/Uploader.swf',
-    				server: baseurl+'disk/fileupload/uploadChunk',
+    				server: baseurl+'disk/fileUpload/uploadChunk',
     				pick: '#picker',
     				resize: false,
     				auto:true,
@@ -139,7 +139,7 @@
 				var files=vm.get("files");
 				var index=null;
 				for(var i=0;i<files.length;i++){
-					if(files[i].fileid==fileid){
+					if(files[i].fileId==fileid){
 						index=i;
 						break;
 					}
@@ -150,8 +150,8 @@
 				var files=vm.get("files");
 				files.push({
 					"rowindex":files.length+1,
-					"fileid":fileid,
-					"filename":filename,
+					"fileId":fileid,
+					"fileName":filename,
 					"size":getSize(filesize),	// 从filesize改成了size
 					"status":0,//0等待上传，1扫描中，2上传中，3上传成功，4上传失败
 					"statusText":"等待上传"
@@ -164,7 +164,7 @@
 				var files=vm.get("files");
 				var index=null;
 				for(var i=0;i<files.length;i++){
-					if(files[i].fileid==fileid){
+					if(files[i].fileId==fileid){
 						index=i;
 						break;
 					}
@@ -208,11 +208,11 @@
 	            	
 	            }).then(function(val) {
 					updateNode(file.id,1,"扫描中(100%)","",val);
-		            var url=baseurl+"disk/fileupload/checkFile";
+		            var url=baseurl+"disk/fileUpload/checkFile";
 		        	var args={
-		        		"filemd5":val,
-		        		"filename":file.name,
-		        		"filesize":file.size,
+		        		"fileMd5":val,
+		        		"fileName":file.name,
+		        		"fileSize":file.size,
 		        		"token":$.getUrlParam("token")
 		        	};
 		        	$.post(url,args,function(data){
@@ -265,7 +265,7 @@
 				    	<tbody>
 				    		<tr p-for="files">
 				    			<td>{{rowindex}}</td>
-				    			<td>{{filename}}</td>
+				    			<td>{{fileName}}</td>
 				    			<td>{{size}}</td>
 				    			<td>
 				    				<span p-if="{{status}}==0">{{statusText}}</span>
