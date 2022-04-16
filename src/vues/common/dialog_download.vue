@@ -3,7 +3,7 @@
 	  	<el-col :span="24">
 	  		<el-card class="box-card" v-loading="loading">
 				<div style="text-align: center;">
-					<span style="font-size: 16px;">{{file.title}}</span>
+					<span style="font-size: 16px;">{{file.title + "等文件"}}</span>
 				</div>
 				<div style="text-align: center;">
 					共<span style="font-size: 12px;color: red;">{{file.totalsize}}</span>；
@@ -13,7 +13,7 @@
 				<div v-if="file.isbig==0">
 					<div style="text-align: center;margin-top: 20px;">
 						<el-input size="small" v-model="downloadname" placeholder="下载名称" style="width: 200px;"></el-input>
-						<el-select size="small" v-model="downloadsuffix" placeholder="下载格式" style="width: 100px;">
+						<el-select size="small" v-model="downloadsuffix" placeholder="打包格式" style="width: 100px;" :disabled="packAble">
     						<el-option label="zip" value="zip"></el-option>
     						<el-option label="rar" value="rar"></el-option>
   						</el-select>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import axios from "axios";
+import qs from 'qs';
 	export default{
 		data(){
 			return {
@@ -37,6 +39,7 @@
 				idjson:"",
 				downloadname:"",
 				downloadsuffix:"",
+				packAble:false,
 				file:{
 					title:"",
 					totalsize:"",
@@ -47,9 +50,10 @@
 			}
 		},
 		methods:{
-			setData(idjson,title){
-				this.idjson=idjson;
-				this.file.title=title;
+			setData(idjson, title){
+				this.idjson = idjson;
+				this.file.title = title;
+				this.downloadname = title;
 				this.getDownloadInfo();
 			},
 			getDownloadInfo(){
@@ -58,16 +62,24 @@
     				"idJson":this.idjson,
     				"token":sessionStorage.getItem("token")
     			}).then(response => {
-    				this.loading=false;
+					this.loading=false;
 					var data=response.body;
 					if(data.code==0){
-						this.file.totalsize=data.data.totalSizeName;
-						this.file.filenum=data.data.fileNum;
-						this.file.foldernum=data.data.folderNum;
-						this.file.isbig=data.data.isBig;
+						this.file.totalsize = data.data.totalSizeName;
+						this.file.filenum = data.data.fileNum;
+						this.file.foldernum = data.data.folderNum;
+						this.file.isbig = data.data.isBig;
 					}else{
 						this.msg=data.msg;
 					}
+					if(this.file.filenum > 1) {
+						this.packAble = false;
+					}else{
+						this.packAble = true;
+					}
+					if(this.packAble === true){
+					this.downloadsuffix = "raw";
+				}
 				});
 			},
 			download(){
@@ -75,26 +87,51 @@
 					this.alertMsg(1,"请填写下载文件名称");
 					return;
 				}
-				if(this.downloadsuffix==null||this.downloadsuffix.length==0){
+				if((this.downloadsuffix==null||this.downloadsuffix.length==0) && this.packAble === false){
 					this.alertMsg(1,"请选择下载文件格式");
 					return;
 				}
 				this.loading=true;
-    			this.$http.post('disk/fileDownload/mergeFiles',{
-    				"downloadName":this.downloadname,
+				var params = {
+					"downloadName":this.downloadname,
     				"downloadSuffix":this.downloadsuffix,
     				"idJson":this.idjson,
-    				"token":sessionStorage.getItem("token")
-    			}).then(response => {
-    				this.loading=false;
-					var data=response.body;
-					if(data.code==0){
-						var url=data.data+"&token="+sessionStorage.getItem("token");
-						location.href=url;
-					}else{
-						this.alertMsg(data.code,data.msg);
-					}
+    				"token":sessionStorage.getItem("token"),
+				};
+				// this.$http.post('disk/fileDownload/download',{
+    			// 	"downloadName":this.downloadname,
+    			// 	"downloadSuffix":this.downloadsuffix,
+    			// 	"idJson":this.idjson,
+    			// 	"token":sessionStorage.getItem("token"),
+				// 	responseType: 'blob'
+    			// })
+				axios
+					.post(this.baseurl + '/disk/fileDownload/download', 
+						qs.stringify(params), 
+						{
+							headers: {
+								"Content-Type": "application/x-www-form-urlencoded",
+							},
+							responseType: "blob" 
+						}
+					)
+					.then(response => {
+						var blob = new Blob([response.data]);
+						var downloadElement = document.createElement('a');
+						var href = window.URL.createObjectURL(blob);
+						downloadElement.href = href;
+						if(this.downloadsuffix == "raw"){
+							downloadElement.download = this.downloadname;
+						}else{
+							downloadElement.download = this.downloadname + "." + this.downloadsuffix;
+						}
+						document.body.appendChild(downloadElement);
+						downloadElement.click();
+						document.body.removeChild(downloadElement);
+						window.URL.revokeObjectURL(href);
 				});
+
+				this.loading=false;
 			}
 		}
 	}

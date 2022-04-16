@@ -391,38 +391,38 @@
         		});
 			},
 			downloadBatch(){ // 打包下载处理函数
-				var len=this.checkeditems.length;
-				if(len==0){
+				var len = this.checkeditems.length;
+				if(len == 0){
 					alertMsg(1,"请选择记录");
 					return;
 				}
-				var title=this.checkeditems[0].name+"等共"+len+"个文件";
-				var idjson="";
+				var title = this.checkeditems[0].name;
+				var idjson = "";
 				for(var i=0;i<this.checkeditems.length;i++){
-					if(i==0){
-						idjson=this.checkeditems[i].id;
+					if(i == 0){
+						idjson = this.checkeditems[i].id;
 					}else{
-						idjson=idjson+","+this.checkeditems[i].id;
+						idjson = idjson+","+this.checkeditems[i].id;
 					}
 				}
 				
-				this.dialog.width="550px";
-				this.dialog.title="文件合并下载";
-				this.dialog.visible=true;
-				this.dialog.type="download";
+				this.dialog.width = "550px";
+				this.dialog.title = "文件打包下载";
+				this.dialog.visible = true;
+				this.dialog.type = "download";
 				setTimeout(()=>{
-					this.$refs.form.setData(idjson,title);
+					this.$refs.form.setData(idjson, title);
 				},0);
 			},
 			FileDownload(row){ // 下载处理函数
-				var idjson = row.id;
-				var title = row.filename+"共1个文件";
+				var downId = row.id;
+				var title = row.fileName;
 				this.dialog.width = "550px";
 				this.dialog.title = "文件下载";
 				this.dialog.visible = true;
 				this.dialog.type = "download";
 				setTimeout(()=>{
-					this.$refs.form.setData(idjson,title);
+					this.$refs.form.setData(downId, title);
 				},0);
 			},
 			handleSearch(){ // 搜索处理函数
@@ -430,8 +430,8 @@
 			},
 			///////////////////////////////////////////////////////弹出框///////////////////////////////////////////////////////////
 			cancel(){
-				this.dialog.visible=false;
-				this.dialog.type="";
+				this.dialog.visible = false;
+				this.dialog.type = "";
 			},
 			confirm(){
 				setTimeout(()=>{
@@ -439,13 +439,13 @@
 				},0);
 			},
 			dialogClose(){
-				this.dialog.visible=false;
-				this.dialog.type="";
+				this.dialog.visible = false;
+				this.dialog.type = "";
 				this.searchs();
 			},
 			drawerClose(){
-				this.drawer.type="";
-				this.drawer.visible=false;
+				this.drawer.type = "";
+				this.drawer.visible = false;
 				this.searchs();
 			},
 			////////////////////////////////////////////////// 换页栏 ////////////////////////////////////////////////////////
@@ -459,23 +459,23 @@
         		});
 			},
 			searchs(){
-				this.table.currentpage=1;
+				this.table.currentpage = 1;
 				this.findList();
 			},
 			sizechange(pagesize){
-				this.table.pagesize=pagesize;
+				this.table.pagesize = pagesize;
 				this.findList();
 			},
 			currentchange(currentpage){
-				this.table.currentpage=currentpage;
+				this.table.currentpage = currentpage;
 				this.findList();
 			},
 			prevClick(){
-				this.table.currentpage=this.table.currentpage-1;
+				this.table.currentpage = this.table.currentpage-1;
 				this.findList();
 			},
 			nextClick(){
-				this.table.currentpage=this.table.currentpage+1;
+				this.table.currentpage = this.table.currentpage+1;
 				this.findList();
 			}
 		}

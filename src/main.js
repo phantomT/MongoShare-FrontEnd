@@ -14,6 +14,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/common.css'
 
+import axios from 'axios';
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueClipboard from 'vue-clipboard2'
@@ -46,6 +47,8 @@ import fileallindex from './vues/fileall/index.vue';
 
 Vue.http.options.emulateJSON=true;
 Vue.http.options.root=baseurl;
+
+Vue.prototype.$axios = axios;
 
 var router=new VueRouter({
 	routes:[
