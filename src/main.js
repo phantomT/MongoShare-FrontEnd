@@ -20,14 +20,6 @@ import VueResource from 'vue-resource'
 import VueClipboard from 'vue-clipboard2'
 import VueUuid from 'vue-uuid'
 
-import VueCodemirror from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css'
-
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
-    
-import CodeDiff from 'vue-code-diff'
-
 import utils from './assets/js/utils.js'
 
 Vue.use(ElementUI);
@@ -35,9 +27,6 @@ Vue.use(VueRouter);
 Vue.use(VueResource);
 Vue.use(VueClipboard);
 Vue.use(VueUuid);
-Vue.use(VueCodemirror);
-Vue.use(mavonEditor);
-Vue.use(CodeDiff);
 Vue.use(utils);
 
 import App from './App.vue';

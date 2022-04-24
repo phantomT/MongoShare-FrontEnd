@@ -10,12 +10,9 @@
   "dependencies": {
     "axios": "^0.26.1",
     "element-ui": "^2.3.4",
-    "mavon-editor": "^2.9.1",
     "qs": "^6.10.3",
     "vue": "^2.5.16",
     "vue-clipboard2": "^0.3.1",
-    "vue-code-diff": "0.0.4",
-    "vue-codemirror": "^4.0.6",
     "vue-resource": "^1.5.3",
     "vue-router": "^3.5.2",
     "vue-uuid": "^1.1.1"

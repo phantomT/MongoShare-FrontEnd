@@ -166,8 +166,11 @@
 						var data=response.body;
 						if(data.code==0){
 							this.$emit('closeAndRefresh');
+							this.$message({
+								message: "文件已移动",
+								type: 'success'
+							});
 						}
-						this.alertMsg(data.code,data.msg);
         				this.loading=false;
 					});
         		});

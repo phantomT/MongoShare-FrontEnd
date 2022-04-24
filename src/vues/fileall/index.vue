@@ -125,7 +125,7 @@
 	import dlUpURL from '../common/dialog_urlupload.vue';
 	import dlDownload from '../common/dialog_download.vue';
 	import dlRename from '../common/dialog_rename.vue';
-	import dlMove from './dialog_move.vue';
+	import dlMove from '../common/dialog_move.vue';
 	import axios from "axios";
 	import qs from 'qs';
 	
