@@ -102,7 +102,6 @@
 		<el-dialog :title="dialog.title" :visible.sync="dialog.visible" :width="dialog.width"
 			:show-close="true" @close="cancel" :modal="true" :close-on-click-modal="false" :close-on-press-escape="false">
 
-			<dlOpen ref="form" v-if="dialog.type=='open'"></dlOpen>
 			<dlDownload ref="form" v-if="dialog.type=='download'"></dlDownload>
 			<dlRename ref="form" v-if="dialog.type=='rename'" v-on:closeAndRefresh="dialogClose"></dlRename>
 			<dlUpURL ref="urlup" v-if="dialog.type=='urlup'" v-on:closeAndRefresh="dialogClose"></dlUpURL>
@@ -127,7 +126,8 @@
 	import dlDownload from '../common/dialog_download.vue';
 	import dlRename from '../common/dialog_rename.vue';
 	import dlMove from './dialog_move.vue';
-	import dlOpen from '../component/dialog_open.vue';
+	import axios from "axios";
+	import qs from 'qs';
 	
 	export default {
 		data(){
@@ -177,7 +177,6 @@
 			dlDownload,
 			dlRename,
 			dlMove,
-			dlOpen,
 			dlUpURL
 		},
 		created(){
@@ -286,13 +285,24 @@
 					this.search.pid=row.id;
 					this.searchs();
 				}else{
-					this.dialog.width="550px";
-					this.dialog.title="文件打开";
-					this.dialog.visible=true;
-					this.dialog.type="open";
-					setTimeout(()=>{
-						this.$refs.form.setData(row.id,row.fileName,row.fileSizeName,row.fileSuffix,row.fileMd5);
-					},0);
+					var params = {
+						"fileMd5":row.fileMd5,
+						"token": sessionStorage.getItem("token"),
+      				};
+					axios
+						.post(this.baseurl + '/disk/fileDownload/preview',
+							qs.stringify(params),
+							{
+								headers: {
+								"Content-Type": "application/x-www-form-urlencoded",
+								},
+							},
+						)
+						.then(response => {
+							console.log(response.data);
+							let url = "ftp://127.0.0.1/"+response.data.data;
+							window.open('http://127.0.0.1:8012/onlinePreview?url='+encodeURIComponent(Base64.encode(url)));
+						});
 				}
 			},
 			//////////////////////////////////////////////////// 按钮操作 ////////////////////////////////////////////////////////
@@ -417,12 +427,13 @@
 			FileDownload(row){ // 下载处理函数
 				var downId = row.id;
 				var title = row.fileName;
+				var fileMd5 = row.fileMd5;
 				this.dialog.width = "550px";
 				this.dialog.title = "文件下载";
 				this.dialog.visible = true;
 				this.dialog.type = "download";
 				setTimeout(()=>{
-					this.$refs.form.setData(downId, title);
+					this.$refs.form.setData(downId, title, fileMd5);
 				},0);
 			},
 			handleSearch(){ // 搜索处理函数
