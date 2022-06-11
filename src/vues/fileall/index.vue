@@ -27,7 +27,7 @@
 			</el-col>
 			<el-col :span="12" class="search">
 				<el-input v-model="listQuery.description" placeholder="请输入文字" class="searchInput" clearable>
-					<el-select slot="prepend" v-model="listQuery.search" clearable placeholder="请选择检索方式" style="width: 150px" class="filter-item">
+					<el-select slot="prepend" v-model="listQuery.searchField" clearable placeholder="请选择检索方式" style="width: 150px" @change="seletChange($event)" class="filter-item">
 						<el-option v-for="item in searchMethod" :key="item.key" :label="item.label" :value="item.key" />
 					</el-select>
 					<el-button slot="append" v-loading="loading" type="primary" icon="el-icon-search" plain @click="handleSearch()">
@@ -165,10 +165,8 @@
       			},
 				searchMethod: [{ label: '按名称检索', key: '+id' }, { label: '按内容检索', key: '-id' }],
 				listQuery: {
-					search: undefined,
-					description: '',
-					page: 1,
-					limit: 20
+					searchField: undefined,
+					description: ''
 				}
 			}
 		},
@@ -271,7 +269,7 @@
 				this.search.pid=id;
 				this.searchs();
 			},
-			itemClickEnter(rowindex){ // 改成预览
+			itemClickEnter(rowindex){ // 预览
 				var row=this.table.data[rowindex];
 				if(row==null){
 					this.alertMsg(1,"您点击的记录不存在");
@@ -436,8 +434,42 @@
 					this.$refs.form.setData(downId, title, fileMd5);
 				},0);
 			},
+			seletChange(id){ // 搜索下拉菜单
+				let obj = this.searchMethod.find((item) => {
+			        return item.key === id;
+			    	});
+			},
 			handleSearch(){ // 搜索处理函数
-
+				var sF = this.listQuery.searchField;
+				if(sF == undefined){
+					return
+				}
+				this.loading=true;
+				this.$http.post('disk/search/fileSearch',{
+					"keyWord":this.listQuery.description,
+					"searchField":this.listQuery.searchField,
+					"orderField":this.search.orderfield,
+					"orderType":this.search.ordertype,
+					"page":this.table.currentpage,
+					"limit":this.table.pagesize
+					//"token":sessionStorage.getItem("token")
+				}).then(response => {
+					var data=response.body;
+					if(data.code==0){
+						var rows=data.data.rows;
+						if(rows!=null&&rows.length!=0){
+							for(var i=0;i<rows.length;i++){
+								var d=rows[i];
+								d.rowindex=i;
+							}
+						}					
+						this.table.data=rows;
+						this.table.total=data.data.totalElements;
+					}else{
+						this.alertMsg(data.code,data.msg);
+					}
+					this.loading=false;
+				});
 			},
 			///////////////////////////////////////////////////////弹出框///////////////////////////////////////////////////////////
 			cancel(){
