@@ -163,7 +163,7 @@
       				type:"",
       				visible: false
       			},
-				searchMethod: [{ label: '按名称检索', key: '+id' }, { label: '按内容检索', key: '-id' }],
+				searchMethod: [{ label: '按名称检索', key: '+id' }, { label: '按类型检索', key: '-id' }],
 				listQuery: {
 					searchField: undefined,
 					description: ''
